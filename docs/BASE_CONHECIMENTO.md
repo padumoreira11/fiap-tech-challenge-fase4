@@ -5,7 +5,7 @@ Fonte principal: `../../IADT - Fase 4 - Tech challenge.pdf` (enunciado, páginas
 | Requisito | Abordagem | Situação |
 | --- | --- | --- |
 | Vídeo: eventos ou movimentos fora do padrão | YOLOv8 pose amostra quadros e sinaliza deslocamento elevado de pontos-chave | Parcial: limiar experimental, sem validação de anomalia ou de procedimento |
-| Áudio: transcrição e alterações vocais | Azure Speech, avaliação WER e medições exploratórias | Parcial: sem classificador validado de fadiga, disartria ou respiração |
+| Áudio: transcrição e alterações vocais | Azure Speech, WER, medições exploratórias e experimento separado com atributos UCI | Parcial: experimento não recebe WAV nem valida fadiga, disartria ou respiração |
 | Termos críticos e sentimento | Busca literal e Azure Language | Executado com uma frase sintética; requer avaliação mais ampla |
 | Sinais vitais | Limiares ilustrativos por linha e simulação com atualização a cada três segundos | Protótipo demonstrativo; sem sensores reais ou validação clínica |
 | Prescrições | Variação relativa e mudança de unidade | Implementado em lote; não avalia adequação clínica |
