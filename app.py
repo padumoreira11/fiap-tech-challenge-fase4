@@ -33,6 +33,7 @@ with v:
     start = col1.number_input('Analisar a partir de (segundos)', min_value=0.0, value=0.0, step=1.0)
     end = col2.number_input('Analisar até (segundos; 0 = final)', min_value=0.0, value=0.0, step=1.0)
     if video and st.button('Analisar vídeo com YOLO pose'):
+        report.pop('video', None)
         try:
             with tempfile.TemporaryDirectory() as d:
                 path = Path(d)/('video'+Path(video.name).suffix); path.write_bytes(video.getvalue())
@@ -46,6 +47,8 @@ with a:
     audio = st.file_uploader('Áudio WAV PCM mono 16 kHz', type=['wav'], key=f'audio_{st.session_state.upload_epoch}')
     baseline = st.file_uploader('Áudio de referência opcional, WAV PCM mono', type=['wav'], key=f'baseline_{st.session_state.upload_epoch}')
     if audio and st.button('Medir características acústicas locais'):
+        report.pop('audio_features', None)
+        report.pop('audio_comparison', None)
         try:
             with tempfile.TemporaryDirectory() as d:
                 path=Path(d)/'audio.wav'; path.write_bytes(audio.getvalue())
@@ -60,6 +63,9 @@ with a:
     if 'audio_comparison' in report: st.json(report['audio_comparison'])
     st.caption('Pausas e nível acústico são medições exploratórias; não detectam fadiga, disartria ou dificuldade respiratória.')
     if audio and st.button('Transcrever com Azure Speech'):
+        for key in ('transcript', 'speech_evaluation', 'language', 'text_alerts', 'review'):
+            report.pop(key, None)
+        st.session_state['clinical_text'] = ''
         if not skey or not region: st.error('Informe chave e região do Speech.')
         else:
             try:
@@ -82,6 +88,8 @@ with a:
 with t:
     text=st.text_area('Texto clínico ou transcrição', key='clinical_text', height=160)
     if st.button('Identificar termos e analisar no Azure Language'):
+        report.pop('language', None)
+        report.pop('text_alerts', None)
         if not text.strip(): st.error('Informe um texto.')
         else:
             report['text_alerts']=text_alerts(text)
@@ -96,9 +104,13 @@ with s:
     vital=st.file_uploader('CSV de sinais vitais',type='csv',key=f'vitals_{st.session_state.upload_epoch}')
     meds=st.file_uploader('CSV de prescrições em ordem cronológica',type='csv',key=f'meds_{st.session_state.upload_epoch}')
     if st.button('Detectar desvios'):
+        report.pop('vital_alerts', None)
+        report.pop('prescription_alerts', None)
         try:
-            report['vital_alerts']=vital_alerts(parse_csv(vital)) if vital else []
-            report['prescription_alerts']=prescription_alerts(parse_csv(meds)) if meds else []
+            vital_results = vital_alerts(parse_csv(vital)) if vital else []
+            prescription_results = prescription_alerts(parse_csv(meds)) if meds else []
+            report['vital_alerts']=vital_results
+            report['prescription_alerts']=prescription_results
             st.success('Análise concluída.')
         except (KeyError,ValueError,UnicodeError) as e: st.error(f'CSV inválido: {e}')
     st.json(report.get('vital_alerts',[])+report.get('prescription_alerts',[]))
