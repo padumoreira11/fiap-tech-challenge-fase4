@@ -24,7 +24,11 @@ def poll(source, output):
                 event = json.loads(line)
                 seen.add(event['id'])
     with source.open(encoding='utf-8-sig', newline='') as stream:
-        rows = list(csv.DictReader(stream))
+        reader = csv.DictReader(stream)
+        required = {'timestamp', 'heart_rate', 'spo2', 'systolic'}
+        if not reader.fieldnames or not required.issubset(reader.fieldnames):
+            raise ValueError('CSV precisa conter timestamp, heart_rate, spo2 e systolic.')
+        rows = list(reader)
     pending = []
     for row in rows:
         for alert in vital_alerts([row]):
