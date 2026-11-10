@@ -4,3 +4,4 @@ exemplos/IMG_3156.MOV
 .venv/
 __pycache__/
 .pytest_cache/
+alertas*.jsonl

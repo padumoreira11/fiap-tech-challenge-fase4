@@ -20,6 +20,8 @@ O arquivo `exemplos/consulta_sintetica.wav` contém fala gerada para testar tran
 
 Na aba Vídeo, os campos de início e fim permitem analisar apenas um intervalo sem modificar a gravação original; o fim é exclusivo. Para a gravação voluntária testada, foram usados 2 e 23 segundos.
 
+Para demonstrar a ingestão contínua de um arquivo CSV local, execute `python monitor.py exemplos/sinais.csv alertas.jsonl --interval 3`. O processo consulta o arquivo repetidamente, mostra novos alertas no terminal e os registra em JSONL, evitando duplicatas na reinicialização. A entrada deve ser atualizada por um produtor externo; execute somente uma instância escritora e use dados sintéticos. O arquivo de saída contém dados potencialmente sensíveis e é ignorado pelo Git. Isto não conecta sensores nem envia alertas por rede, não garante latência ou disponibilidade e não deve ser usado na assistência.
+
 ## Limitações e trabalho restante
 
 O vídeo sinaliza deslocamentos elevados entre poses de amostras consecutivas, com limiar experimental; isso não valida anomalias clínicas nem desvios de procedimento. A análise acústica calcula energia e silêncio, sem detectar fadiga, disartria ou respiração. As duas integrações Azure foram verificadas com uma frase sintética, não com dados clínicos. Uma sequência simulada atualiza sinais e alertas a cada três segundos; não há conexão com sensores nem entrega real à equipe. Nenhuma acurácia clínica foi estabelecida. Portanto o protótipo não cumpre integralmente o enunciado. O vídeo de entrega e avaliação em conjuntos rotulados precisam ser realizados e documentados com resultados verdadeiros.
