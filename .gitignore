@@ -1,0 +1,6 @@
+# Gravações pessoais e credenciais não devem ser publicadas.
+exemplos/IMG_3156.MOV
+.env
+.venv/
+__pycache__/
+.pytest_cache/
