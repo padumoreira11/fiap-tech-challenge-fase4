@@ -167,7 +167,7 @@ if alerts:
         from datetime import datetime, timezone
         report['review'] = {'status': 'revisado na demonstração', 'timestamp_utc': datetime.now(timezone.utc).isoformat(), 'alerts': list(alerts)}
 if 'review' in report:
-    if report['review']['alerts'] == alerts: st.write(report['review'])
+    if report['review'].get('alerts') == alerts: st.write(report['review'])
     else: st.warning('Os alertas mudaram após a revisão anterior; revise a lista atual.')
 report['alerts']=alerts
 st.download_button('Baixar relatório JSON', json.dumps(report,ensure_ascii=False,indent=2), 'relatorio.json','application/json')

@@ -20,6 +20,10 @@ Uma verificação posterior adicionou o teste de reinício da análise, totaliza
 
 Na gravação voluntária de demonstração, foram analisadas inicialmente 25 amostras a intervalos de um segundo. Uma pessoa foi detectada em todas; o deslocamento excedeu o limiar experimental de 0,15 em aproximadamente 1 e 24 segundos. O participante esclareceu que estava se afastando ou aproximando da câmera nesses momentos. Na reanálise do intervalo de 2 segundos (inclusive) a 23 segundos (exclusivo), houve uma pessoa em cada uma das 21 amostras e nenhum deslocamento acima do limiar. O resultado não valida a detecção de anomalias; ilustra como movimentos de entrada e saída afetam o indicador. O vídeo pessoal não deve ser publicado sem consentimento e foi excluído do versionamento.
 
+O participante informou movimentos lentos entre 3 e 16 segundos e mais rápidos entre 17 e 21 segundos. A média dos deslocamentos normalizados nas amostras foi 0,0434 (14 pontos) e 0,0645 (5 pontos), respectivamente. Nenhum excedeu o limiar 0,15: portanto o limiar atual não sinalizou os movimentos rápidos descritos. Trata-se de uma gravação e de uma referência aproximada, não de validação de anomalias.
+
+Uma avaliação de fala separada no TORGO usou 300 gravações de seis participantes e validação que separa participantes. Foram cinco classificações corretas e uma incorreta no nível de participante. As limitações, a matriz de confusão e os passos de reprodução constam em `EXPERIMENTO_TORGO.md`; o modelo não está implantado como detector clínico.
+
 ## Roteiro de até 15 minutos
 
 1. Apresentar o problema, limitações e arquitetura (2 min).
