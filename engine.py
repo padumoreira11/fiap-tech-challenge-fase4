@@ -91,7 +91,13 @@ def azure_speech(path, region, key):
     return ' '.join(parts)
 
 
-def video_analyze(path, model_name='yolov8n-pose.pt', start_seconds=0, end_seconds=None):
+def movement_exceeds(distance, threshold):
+    if not math.isfinite(distance) or not math.isfinite(threshold) or distance < 0 or threshold < 0:
+        raise ValueError('Distância e limiar devem ser finitos e não negativos.')
+    return distance > threshold
+
+
+def video_analyze(path, model_name='yolov8n-pose.pt', start_seconds=0, end_seconds=None, motion_threshold=0.15):
     import cv2
     from ultralytics import YOLO
     model = YOLO(model_name)
@@ -101,6 +107,9 @@ def video_analyze(path, model_name='yolov8n-pose.pt', start_seconds=0, end_secon
     fps = cap.get(cv2.CAP_PROP_FPS) or 25
     total_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
     duration = total_frames / fps if total_frames > 0 else None
+    if not math.isfinite(motion_threshold) or motion_threshold < 0:
+        cap.release()
+        raise ValueError('O limiar de movimento deve ser finito e não negativo.')
     if start_seconds < 0 or (end_seconds is not None and end_seconds <= start_seconds):
         cap.release()
         raise ValueError('O fim deve ser maior que o início, e o início não pode ser negativo.')
@@ -130,7 +139,7 @@ def video_analyze(path, model_name='yolov8n-pose.pt', start_seconds=0, end_secon
                         if len(shared) >= 5:
                             distance = sum(((current[i][0]-previous[i][0])**2 + (current[i][1]-previous[i][1])**2)**.5 for i in shared)/len(shared)
                             item['mean_keypoint_displacement'] = round(distance, 4)
-                            item['movement_flag'] = distance > .15
+                            item['movement_flag'] = movement_exceeds(distance, motion_threshold)
                     previous = current
                 else:
                     previous = None
@@ -143,6 +152,7 @@ def video_analyze(path, model_name='yolov8n-pose.pt', start_seconds=0, end_secon
     # Ausência de detecção é limitação observacional, não anomalia clínica.
     return {'frames_read': frame_no, 'fps': fps, 'duration_seconds': duration,
             'interval_start_seconds': start_seconds, 'interval_end_seconds': end_seconds,
+            'motion_threshold': motion_threshold,
             'samples': samples, 'no_pose_samples': missing}
 
 

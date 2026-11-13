@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from engine import vital_alerts, prescription_alerts, text_alerts, simulated_observation, audio_features, compare_audio_features
+from engine import vital_alerts, prescription_alerts, text_alerts, simulated_observation, audio_features, compare_audio_features, movement_exceeds
 from evaluation import word_error_rate
 import pytest
 
@@ -46,3 +46,8 @@ def test_word_error_rate():
     assert word_error_rate('um dois três', 'um quatro três')['wer'] == pytest.approx(1/3)
     assert word_error_rate('um dois', 'um dois três')['errors'] == 1
     with pytest.raises(ValueError): word_error_rate('', 'texto')
+
+def test_movement_threshold_strict_and_validated():
+    assert not movement_exceeds(0.06, 0.06)
+    assert movement_exceeds(0.061, 0.06)
+    with pytest.raises(ValueError): movement_exceeds(float('nan'), 0.1)

@@ -22,6 +22,8 @@ Na gravação voluntária de demonstração, foram analisadas inicialmente 25 am
 
 O participante informou movimentos lentos entre 3 e 16 segundos e mais rápidos entre 17 e 21 segundos. A média dos deslocamentos normalizados nas amostras foi 0,0434 (14 pontos) e 0,0645 (5 pontos), respectivamente. Nenhum excedeu o limiar 0,15: portanto o limiar atual não sinalizou os movimentos rápidos descritos. Trata-se de uma gravação e de uma referência aproximada, não de validação de anomalias.
 
+Comparação exploratória após conhecer a marcação, sem separação de teste: com limiar 0,06, foram sinalizados 2/14 pontos lentos e 4/5 rápidos; com 0,08, 2/14 lentos e 0/5 rápidos; com 0,15, 0/14 lentos e 0/5 rápidos. A comparação usa diferenças entre poses amostradas em segundos consecutivos; inclui movimentos normais e não estabelece rótulos de anomalia clínica. O limiar 0,06 foi observado no mesmo vídeo e não é um parâmetro validado, nem deve ser generalizado. A interface agora permite alterá-lo explicitamente e registra o valor no resultado.
+
 Uma avaliação de fala separada no TORGO usou 300 gravações de seis participantes e validação que separa participantes. Foram cinco classificações corretas e uma incorreta no nível de participante. As limitações, a matriz de confusão e os passos de reprodução constam em `EXPERIMENTO_TORGO.md`; o modelo não está implantado como detector clínico.
 
 ## Roteiro de até 15 minutos

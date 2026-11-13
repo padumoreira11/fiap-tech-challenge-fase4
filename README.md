@@ -20,6 +20,8 @@ O arquivo `exemplos/consulta_sintetica.wav` contém fala gerada para testar tran
 
 Na aba Vídeo, os campos de início e fim permitem analisar apenas um intervalo sem modificar a gravação original; o fim é exclusivo. Para a gravação voluntária testada, foram usados 2 e 23 segundos.
 
+O limiar de deslocamento é configurável para explorar o compromisso entre sinalizações e omissões; o valor padrão 0,15 é ilustrativo. A escolha feita no vídeo de demonstração não é validada para outras câmeras, distâncias ou pessoas.
+
 Para demonstrar a ingestão contínua de um arquivo CSV local, execute `python monitor.py exemplos/sinais.csv alertas.jsonl --interval 3`. O processo consulta o arquivo repetidamente, mostra novos alertas no terminal e os registra em JSONL, evitando duplicatas na reinicialização. A entrada deve ser atualizada por um produtor externo; execute somente uma instância escritora e use dados sintéticos. O arquivo de saída contém dados potencialmente sensíveis e é ignorado pelo Git. Isto não conecta sensores nem envia alertas por rede, não garante latência ou disponibilidade e não deve ser usado na assistência.
 
 ## Limitações e trabalho restante

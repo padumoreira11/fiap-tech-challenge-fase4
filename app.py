@@ -34,8 +34,9 @@ with v:
     col1, col2 = st.columns(2)
     start = col1.number_input('Analisar a partir de (segundos)', min_value=0.0, value=0.0, step=1.0)
     end = col2.number_input('Analisar até (segundos; 0 = final)', min_value=0.0, value=0.0, step=1.0)
+    threshold = st.number_input('Limiar experimental de deslocamento', min_value=0.0, value=0.15, step=0.01, format='%.2f')
     import hashlib
-    video_signature = (hashlib.sha256(video.getvalue()).hexdigest(), start, end) if video else None
+    video_signature = (hashlib.sha256(video.getvalue()).hexdigest(), start, end, threshold) if video else None
     if report.get('video_signature') != video_signature:
         report.pop('video', None)
         report.pop('video_signature', None)
@@ -45,7 +46,7 @@ with v:
             with tempfile.TemporaryDirectory() as d:
                 path = Path(d)/('video'+Path(video.name).suffix); path.write_bytes(video.getvalue())
                 with st.spinner('Analisando um quadro por segundo; o modelo pode ser baixado na primeira execução...'):
-                    report['video'] = video_analyze(str(path), start_seconds=start, end_seconds=end or None)
+                    report['video'] = video_analyze(str(path), start_seconds=start, end_seconds=end or None, motion_threshold=threshold)
                     report['video_signature'] = video_signature
             st.success('Análise concluída.')
         except Exception as e: st.error(f'Falha no vídeo: {e}')
@@ -54,7 +55,7 @@ with v:
         samples = pd.DataFrame(report['video']['samples'])
         if 'mean_keypoint_displacement' in samples:
             st.line_chart(samples.set_index('second')['mean_keypoint_displacement'])
-        st.json(report['video']); st.info('O deslocamento médio acima de 0,15 da dimensão da imagem é sinalizado como evento para revisão, não como anomalia clínica. Câmera, oclusão e várias pessoas afetam o resultado.')
+        st.json(report['video']); st.info('O limiar é experimental: eventos acima dele são enviados para revisão, não classificados como anomalia clínica. Câmera, oclusão e várias pessoas afetam o resultado.')
 with a:
     audio = st.file_uploader('Áudio WAV PCM mono 16 kHz', type=['wav'], key=f'audio_{st.session_state.upload_epoch}')
     baseline = st.file_uploader('Áudio de referência opcional, WAV PCM mono', type=['wav'], key=f'baseline_{st.session_state.upload_epoch}')
