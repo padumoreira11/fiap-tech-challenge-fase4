@@ -1,5 +1,8 @@
 # Relatório técnico e roteiro de demonstração
 
+**Modalidade:** trabalho individual.  
+**Integrante:** Paulo Eduardo Oliveira Moreira.
+
 ## Problema e fluxo
 
 O desafio solicita monitoramento multimodal e alertas para uma equipe médica. Este protótipo recebe vídeo, áudio e CSVs, apresenta achados em um painel e permite exportar JSON. A transcrição usa Azure Speech e o texto pode ser analisado com Azure Language. O vídeo usa YOLOv8 pose em amostras de um quadro por segundo; sinais vitais e variações de prescrição usam regras ilustrativas.
