@@ -5,6 +5,9 @@ from pathlib import Path
 import streamlit as st
 from engine import vital_alerts, prescription_alerts, text_alerts, parse_csv, azure_speech, azure_text, video_analyze, audio_features, compare_audio_features, simulated_observation
 from evaluation import word_error_rate
+from alert_queue import enqueue, list_alerts, acknowledge
+
+QUEUE_PATH = Path(os.getenv('FIAP_QUEUE_PATH', str(Path(__file__).resolve().parent / 'runtime' / 'alertas-demo.sqlite3')))
 
 st.set_page_config(page_title='Monitor multimodal', layout='wide')
 st.title('Monitor multimodal — Fase 4')
@@ -16,7 +19,7 @@ report = st.session_state.report
 if st.button('Iniciar nova análise'):
     st.session_state.report = {'alerts': []}
     st.session_state.upload_epoch += 1
-    for key in ('simulation_start', 'simulation_completed', 'clinical_text', 'reference_transcript'):
+    for key in ('simulation_start', 'simulation_completed', 'simulation_id', 'clinical_text', 'reference_transcript'):
         st.session_state.pop(key, None)
     st.rerun()
 
@@ -131,7 +134,9 @@ with live:
     st.caption('Demonstração com quatro amostras artificiais, uma a cada três segundos. Não há conexão com sensores reais.')
     if st.button('Iniciar simulação ao vivo'):
         import time
+        from uuid import uuid4
         st.session_state['simulation_start'] = time.time()
+        st.session_state['simulation_id'] = str(uuid4())
         st.session_state['simulation_completed'] = False
         report['live_observations'] = []
         report['live_alerts'] = []
@@ -146,6 +151,7 @@ with live:
         observations = [simulated_observation(i) for i in range(count)]
         report['live_observations'] = observations
         report['live_alerts'] = vital_alerts(observations)
+        enqueue(QUEUE_PATH, st.session_state['simulation_id'], report['live_alerts'])
         st.dataframe(observations, use_container_width=True)
         if report['live_alerts']:
             st.error('Desvio demonstrativo detectado: solicite revisão da equipe.')
@@ -156,6 +162,25 @@ with live:
                 st.session_state['simulation_completed'] = True
                 st.rerun(scope='app')
     live_monitor()
+
+st.subheader('Fila local da equipe simulada')
+st.caption('Fila local desta simulação, atualizada a cada três segundos; não notifica pessoas nem sistemas externos.')
+@st.fragment(run_every=3)
+def team_queue():
+    run_id=st.session_state.get('simulation_id')
+    if not run_id:
+        st.write('Inicie uma simulação para receber alertas aqui.')
+        return
+    items=list_alerts(QUEUE_PATH,run_id)
+    if not items:
+        st.write('Nenhum alerta recebido nesta simulação.')
+    for item in items:
+        status='Recebido para revisão' if item['acknowledged_utc'] else 'Pendente de recebimento'
+        st.write(f"{status} — {item['event_time']}: {item['message']}")
+        if not item['acknowledged_utc'] and st.button('Registrar recebimento',key=f"ack_{item['id']}"):
+            acknowledge(QUEUE_PATH,run_id,item['id'])
+            st.rerun()
+team_queue()
 
 st.subheader('Painel de alertas')
 alerts=report.get('vital_alerts',[])+report.get('prescription_alerts',[])+report.get('text_alerts',[])+report.get('live_alerts',[])

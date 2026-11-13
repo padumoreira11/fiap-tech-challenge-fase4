@@ -10,7 +10,7 @@ Fonte principal: `../../IADT - Fase 4 - Tech challenge.pdf` (enunciado, páginas
 | Sinais vitais | Limiares ilustrativos, simulação e monitor de arquivo CSV com consulta periódica | Protótipo demonstrativo; sem sensores reais ou validação clínica |
 | Prescrições | Variação relativa e mudança de unidade | Implementado em lote; não avalia adequação clínica |
 | Movimentação durante internação | Deslocamento entre amostras sucessivas de pontos-chave | Parcial: não rastreia identidade nem monitora continuamente |
-| Alertas | Painel com revisão e monitor local com registro JSONL idempotente | Parcial: sem envio real à equipe |
+| Alertas | Simulação envia alertas para fila local com confirmação persistente de recebimento | Demonstração local da equipe simulada; não envia a equipe real |
 | Git, relatório e vídeo até 15 minutos | Código, relatório e roteiro neste diretório | Vídeo e publicação dependem do grupo |
 
 As aulas de análise de vídeo, áudio e texto (Aula 03, p. 3; Aula 04, p. 3; Aula 05, p. 3; Aula 06, p. 3) cobrem, respectivamente, pontos-chave e MediaPipe, transcrição, classificação e sumarização. Esses exemplos apoiam o desenho, mas não substituem os serviços Azure especificados. As aulas de AWS e OpenAI são referências complementares, não equivalentes automáticos aos requisitos Azure.

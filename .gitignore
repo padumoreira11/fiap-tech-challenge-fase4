@@ -5,3 +5,4 @@ exemplos/IMG_3156.MOV
 __pycache__/
 .pytest_cache/
 alertas*.jsonl
+runtime/

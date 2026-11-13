@@ -28,6 +28,8 @@ Para demonstrar a ingestão contínua de um arquivo CSV local, execute `python m
 
 O vídeo sinaliza deslocamentos elevados entre poses de amostras consecutivas, com limiar experimental; isso não valida anomalias clínicas nem desvios de procedimento. A análise acústica calcula energia e silêncio, sem detectar fadiga, disartria ou respiração. As duas integrações Azure foram verificadas com uma frase sintética, não com dados clínicos. Uma sequência simulada atualiza sinais e alertas a cada três segundos; não há conexão com sensores nem entrega real à equipe. Nenhuma acurácia clínica foi estabelecida. Portanto o protótipo não cumpre integralmente o enunciado. O vídeo de entrega e avaliação em conjuntos rotulados precisam ser realizados e documentados com resultados verdadeiros.
 
+A simulação envia seus alertas automaticamente para a **fila local da equipe simulada**, em SQLite, com atualização periódica e botão de registro de recebimento. O arquivo `runtime/alertas-demo.sqlite3` persiste entre recargas e é ignorado pelo Git; cada nova simulação recebe um identificador próprio. A fila não envia e-mail, não integra prontuário ou profissionais reais, não garante operação contínua e não deve ser usada para atendimento.
+
 Na aba Áudio, é possível comparar medidas de energia e pausas com uma gravação de referência. As condições de gravação e o conteúdo influenciam as medidas, que não indicam condição médica.
 
 Testes locais: `python -m pytest tests`.

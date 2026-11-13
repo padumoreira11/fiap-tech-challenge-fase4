@@ -1,4 +1,4 @@
-streamlit>=1.35
+streamlit>=1.40
 numpy>=1.26
 opencv-python-headless>=4.10
 ultralytics>=8.3
